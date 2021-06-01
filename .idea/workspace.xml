@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="36d4ce72-35f0-4e42-8ba2-2d3896f731c9" name="Default Changelist" comment="Hello Android" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1tLwrAJNmXCd5ltcbmR5sOqN2h6" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="36d4ce72-35f0-4e42-8ba2-2d3896f731c9" name="Default Changelist" comment="" />
+      <created>1622561874147</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1622561874147</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Hello Android">
+      <created>1622562017053</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1622562017053</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Hello Android">
+      <created>1622562290386</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1622562290386</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Hello Android" />
+    <option name="LAST_COMMIT_MESSAGE" value="Hello Android" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="-3399" y="94" key="#Project_Structure" timestamp="1622561885204">
+      <screen x="-3840" y="0" width="1920" height="1040" />
+    </state>
+    <state x="-3399" y="94" key="#Project_Structure/0.0.1368.872/-3840.0.1920.1040@-3840.0.1920.1040" timestamp="1622561885204" />
+    <state x="-3260" y="87" key="CommitChangelistDialog2" timestamp="1622562300998">
+      <screen x="-3840" y="0" width="1920" height="1040" />
+    </state>
+    <state x="-3260" y="87" key="CommitChangelistDialog2/0.0.1368.872/-3840.0.1920.1040@-3840.0.1920.1040" timestamp="1622562300998" />
+    <state x="-3099" y="261" key="FileChooserDialogImpl" timestamp="1622561901366">
+      <screen x="-3840" y="0" width="1920" height="1040" />
+    </state>
+    <state x="-3099" y="261" key="FileChooserDialogImpl/0.0.1368.872/-3840.0.1920.1040@-3840.0.1920.1040" timestamp="1622561901366" />
+    <state x="-3378" y="164" key="SettingsEditor" timestamp="1622562381977">
+      <screen x="-3840" y="0" width="1920" height="1040" />
+    </state>
+    <state x="-3378" y="164" key="SettingsEditor/0.0.1368.872/-3840.0.1920.1040@-3840.0.1920.1040" timestamp="1622562381977" />
+    <state x="-3287" y="239" key="Vcs.Push.Dialog.v2" timestamp="1622562358756">
+      <screen x="-3840" y="0" width="1920" height="1040" />
+    </state>
+    <state x="-3287" y="239" key="Vcs.Push.Dialog.v2/0.0.1368.872/-3840.0.1920.1040@-3840.0.1920.1040" timestamp="1622562358756" />
+    <state x="-3103" y="419" key="git4idea.remote.GitConfigureRemotesDialog" timestamp="1622562347041">
+      <screen x="-3840" y="0" width="1920" height="1040" />
+    </state>
+    <state x="-3103" y="419" key="git4idea.remote.GitConfigureRemotesDialog/0.0.1368.872/-3840.0.1920.1040@-3840.0.1920.1040" timestamp="1622562347041" />
+  </component>
+</project>
