@@ -1,8 +1,11 @@
 package com.example.helloandroid
 
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mWelcomeTextView: TextView //지연 초기화를 위한 선언
@@ -12,8 +15,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         //메인 액티비티
 
-        mWelcomeTextView = findViewById(R.id.tv_hello)  //지연 초기화 시점
+//        mWelcomeTextView = findViewById(R.id.tv_hello)  //지연 초기화 시점
+
+//        val tvTitle = findViewById<TextView>(R.id.tv_title)
+//        tvTitle.text = "Hello Kotlin"
+        tv_title.text = "Hello Kotlin! again!"  //합성 프로퍼티의 사용
+
+        titleOn()   //확장 함수 호출
     }
+}
+
+fun MainActivity.titleOn() {    //확장 함수 사용
+    tv_title.text = "Hi There"
+    tv_title.visibility = View.VISIBLE
 }
 
 /*
