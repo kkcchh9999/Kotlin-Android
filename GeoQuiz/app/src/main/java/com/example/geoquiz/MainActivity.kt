@@ -12,8 +12,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 
 private const val TAG = "MainActivity"  //태그
+private const val KEY_INDEX = "index"
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,23 +25,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var previousButton: ImageButton //chap2. 챌린지 2 이전 버튼 만들기
     private lateinit var questionTextView: TextView
 
-    private val questionBank = listOf(
-        Question(R.string.question_australia, true),
-        Question(R.string.question_oceans, true),
-        Question(R.string.question_mideast, false),
-        Question(R.string.question_africa, false),
-        Question(R.string.question_americas,true),
-        Question(R.string.question_asia, true)
-    )
-    private var currentIndex = 0
     private var inputCount = 0 //chap3. 챌린지 2   점수 출력하기
     private var point = 0 //chap3. 챌린지 2    점수 출력하기
+
+    private val quizViewModel: QuizViewModel by lazy {
+        ViewModelProvider(this).get(QuizViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate(Bundle?) called")
         setContentView(R.layout.activity_main)  //화면에 레이아웃을 inflate 하여 나타낸다.
 
+        val currentIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
+        quizViewModel.currentIndex = currentIndex
+
+        Log.d(TAG, "Got a QuizViewModel: $quizViewModel")
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
         nextButton = findViewById(R.id.next_button)
@@ -58,60 +59,28 @@ class MainActivity : AppCompatActivity() {
 
         //chap2. 챌린지 1  문제를 눌러도 다음문제 출력하기
         questionTextView.setOnClickListener {
-            currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.moveToNext()
             updateQuestion()
         }
 
         nextButton.setOnClickListener {
-            currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.moveToNext()
             updateQuestion()
         }
 
         previousButton.setOnClickListener {     //chap2. 챌린지 2 이전 버튼 만들기
-            if (currentIndex == 0) {
-                currentIndex = questionBank.size - 1
-                updateQuestion()
-            }
-            else {
-                currentIndex = (currentIndex - 1) % questionBank.size
-                updateQuestion()
-            }
+            quizViewModel.moveToPrevious()
+            updateQuestion()
         }
-
         updateQuestion()
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "onStart() called")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume() called")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "onPause() called")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop() called")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy() called")
-    }
-
     private fun updateQuestion() {
-        val questionTextResId = questionBank[currentIndex].textResId
+        val questionTextResId = quizViewModel.currentQuestionText
         questionTextView.setText(questionTextResId)
 
         //Chap3. 챌린지 1 - 정답시 true false 버튼 안보이게하기
-        if (questionBank[currentIndex].score) {
+        if (quizViewModel.currentQuestionScore) {
             trueButton.visibility = Button.INVISIBLE
             falseButton.visibility = Button.INVISIBLE
         } else {
@@ -121,7 +90,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
-        val correctAnswer = questionBank[currentIndex].answer
+        val correctAnswer = quizViewModel.currentQuestionAnswer
 
         val messageResId = if (userAnswer == correctAnswer) {
             R.string.correct_toast
@@ -130,8 +99,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (messageResId == R.string.correct_toast) {
-            questionBank[currentIndex].score = true
-            currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.currentQuestionScore = true
+            quizViewModel.moveToNext()
             updateQuestion()    //chap3. 챌린지 2  점수 출력하기
             point ++    //chap3. 챌린지 2  점수 출력하기
         }
@@ -142,5 +111,11 @@ class MainActivity : AppCompatActivity() {
         else {
             Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.d(TAG, "onSaveInstanceState")
+        outState.putInt(KEY_INDEX, quizViewModel.currentIndex)
     }
 }
