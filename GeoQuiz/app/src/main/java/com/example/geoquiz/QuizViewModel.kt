@@ -19,7 +19,18 @@ class QuizViewModel : ViewModel() {
         Question(R.string.question_americas,true),
         Question(R.string.question_asia, true)
     )
+
     var currentIndex = 0
+
+    var cheated = mutableListOf(false, false, false, false, false, false) //chap6. 챌린지 2 요소별 치트 여부 확인
+
+    fun getCheated(index: Int): Boolean {   //chap6. 챌린지 2 요소별 치트 여부 확인
+        return cheated[index]
+    }
+
+    fun setCheated(index: Int) {    //chap6. 챌린지 2 요소별 치트 여부 확인
+        cheated[index] = true
+    }
 
     val currentQuestionAnswer: Boolean
         get() = questionBank[currentIndex].answer
