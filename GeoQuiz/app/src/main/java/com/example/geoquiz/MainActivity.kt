@@ -1,9 +1,12 @@
 package com.example.geoquiz
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.nfc.Tag
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -20,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 private const val TAG = "MainActivity"  //태그
 private const val KEY_INDEX = "index"
 private const val KEY_CHEATED = "cheat"
+private const val KEY_CHEAT_COUNT = "cheatCount"
 private const val REQUEST_CODE_CHEAT = 0
 
 class MainActivity : AppCompatActivity() {
@@ -30,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var previousButton: ImageButton //chap2. 챌린지 2 이전 버튼 만들기
     private lateinit var questionTextView: TextView
     private lateinit var cheatButton: Button
+    private lateinit var versionTextView: TextView
 
     private var inputCount = 0 //chap3. 챌린지 2   점수 출력하기
     private var point = 0 //chap3. 챌린지 2    점수 출력하기
@@ -37,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     private val quizViewModel: QuizViewModel by lazy {
         ViewModelProvider(this).get(QuizViewModel::class.java)
     }
-
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate(Bundle?) called")
@@ -49,6 +54,8 @@ class MainActivity : AppCompatActivity() {
         if (isCheater) {
             quizViewModel.setCheated(quizViewModel.currentIndex)     //chap6. 챌린지 1  화면회전시 데이터 유지하기
         }
+        val cheatCount = savedInstanceState?.getInt(KEY_CHEAT_COUNT, 0) ?: 0    //chap7. 챌린지 2 치트 3회만 할 수 있게 데이터 유지
+        quizViewModel.cheatCount = cheatCount
 
         Log.d(TAG, "Got a QuizViewModel: $quizViewModel")
         trueButton = findViewById(R.id.true_button)
@@ -57,6 +64,9 @@ class MainActivity : AppCompatActivity() {
         previousButton = findViewById(R.id.previous_button) //chap2. 챌린지 2 이전 버튼 만들기
         questionTextView = findViewById(R.id.question_text_view)
         cheatButton = findViewById(R.id.cheat_button)
+        versionTextView = findViewById(R.id.version_text_view)
+
+        versionTextView.text = "API 레벨 " + Build.VERSION.SDK //chap7. 챌린지 1 api 버전 출력하기
 
         trueButton.setOnClickListener {
             inputCount ++
@@ -84,11 +94,17 @@ class MainActivity : AppCompatActivity() {
             updateQuestion()
         }
 
-        cheatButton.setOnClickListener {
+        cheatButton.setOnClickListener { view ->
             val answerIsTrue = quizViewModel.currentQuestionAnswer
             val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
-            startActivityForResult(intent, REQUEST_CODE_CHEAT)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val options = ActivityOptions.makeClipRevealAnimation(view, 0, 0, view.width, view.height)
+                startActivityForResult(intent, REQUEST_CODE_CHEAT, options.toBundle())
+            } else {
+                startActivityForResult(intent, REQUEST_CODE_CHEAT)
+            }
         }
+
 
         updateQuestion()
     }
@@ -103,6 +119,7 @@ class MainActivity : AppCompatActivity() {
         if(requestCode == REQUEST_CODE_CHEAT) {
             if (data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) == true) {
                 quizViewModel.setCheated(quizViewModel.currentIndex)
+                quizViewModel.plusCheat()
             }
         }
     }
@@ -118,6 +135,10 @@ class MainActivity : AppCompatActivity() {
         } else {
             trueButton.visibility = Button.VISIBLE
             falseButton.visibility = Button.VISIBLE
+        }
+
+        if (quizViewModel.cheatCount > 2) {     //chap7. 챌린지 2 치트 3회만 할 수 있게
+            cheatButton.visibility = Button.INVISIBLE
         }
     }
 
@@ -150,5 +171,6 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onSaveInstanceState")
         outState.putInt(KEY_INDEX, quizViewModel.currentIndex)
         outState.putBoolean(KEY_CHEATED, quizViewModel.getCheated(quizViewModel.currentIndex)) //chap6. 챌린지 1  화면회전시 데이터 유지하기
+        outState.putInt(KEY_CHEAT_COUNT, quizViewModel.cheatCount)  //chap7. 챌린지 2 치트 3회만 할 수 있게
     }
 }

@@ -21,6 +21,7 @@ class QuizViewModel : ViewModel() {
     )
 
     var currentIndex = 0
+    var cheatCount = 0      //chap7. 챌린지 2 치트 3회만 할 수 있게
 
     var cheated = mutableListOf(false, false, false, false, false, false) //chap6. 챌린지 2 요소별 치트 여부 확인
 
@@ -30,6 +31,10 @@ class QuizViewModel : ViewModel() {
 
     fun setCheated(index: Int) {    //chap6. 챌린지 2 요소별 치트 여부 확인
         cheated[index] = true
+    }
+
+    fun plusCheat() { //chap7. 챌린지 2 치트 3회만 할 수 있게
+        cheatCount ++
     }
 
     val currentQuestionAnswer: Boolean
