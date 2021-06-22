@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,12 +49,16 @@ class CrimeListFragment : Fragment(){
         crimeRecyclerView.adapter = adapter     //어댑터와 리사이클러뷰 연결
     }
 
-    private inner class CrimeHolder(view: View) : RecyclerView.ViewHolder(view) {
+    private inner class CrimeHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
         private lateinit var crime: Crime
 
         private val titleTextView: TextView = itemView.findViewById(R.id.crime_title)
         private val dateTextView: TextView = itemView.findViewById(R.id.crime_date)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
 
         fun bind(crime: Crime) {
             this.crime = crime
@@ -61,6 +66,9 @@ class CrimeListFragment : Fragment(){
             dateTextView.text = this.crime.date.toString()
         }
 
+        override fun onClick(v: View?) {    //onClickListener
+            Toast.makeText(context, "${crime.title} pressed!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private inner class CrimeAdapter(var crimes: List<Crime>) : RecyclerView.Adapter<CrimeHolder>() {
