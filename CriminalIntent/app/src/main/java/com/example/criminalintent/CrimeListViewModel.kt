@@ -11,6 +11,7 @@ class CrimeListViewModel : ViewModel() {
             val crime = Crime()
             crime.title = "Crime #$i"
             crime.isSolved = i%2 == 0
+            if (i % 2 == 0) crime.requiresPolice = 2    //2이면 police 버튼 생성
             crimes += crime
         }
     }

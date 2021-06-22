@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -49,7 +50,7 @@ class CrimeListFragment : Fragment(){
         crimeRecyclerView.adapter = adapter     //어댑터와 리사이클러뷰 연결
     }
 
-    private inner class CrimeHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    private inner class CrimeHolder1(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
         private lateinit var crime: Crime
 
@@ -71,17 +72,73 @@ class CrimeListFragment : Fragment(){
         }
     }
 
-    private inner class CrimeAdapter(var crimes: List<Crime>) : RecyclerView.Adapter<CrimeHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CrimeHolder {
-            val view = layoutInflater.inflate(R.layout.list_item_crime, parent, false)
-            return CrimeHolder(view)
-        }   //onCreate
+    private inner class CrimeHolder2(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
-        override fun onBindViewHolder(holder: CrimeHolder, position: Int) { //바인딩
-            val crime = crimes[position]
-            holder.bind(crime)
+        private lateinit var crime: Crime
+
+        private val titleTextView: TextView = itemView.findViewById(R.id.crime_title)
+        private val dateTextView: TextView = itemView.findViewById(R.id.crime_date)
+        private val policeButton: Button = itemView.findViewById(R.id.btn_police)
+
+        init {
+            itemView.setOnClickListener(this)
         }
 
+        fun bind(crime: Crime) {
+            this.crime = crime
+            titleTextView.text = this.crime.title
+            dateTextView.text = this.crime.date.toString()
+            policeButton.setOnClickListener {
+                Toast.makeText(context, "Police!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        override fun onClick(v: View?) {    //onClickListener
+            Toast.makeText(context, "${crime.title} pressed!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private inner class CrimeAdapter(var crimes: List<Crime>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+        override fun getItemViewType(position: Int): Int {  //Chap9 챌린지
+            return crimes[position].requiresPolice          //onCreateViewHolder 함수에 들어가는 viewType 을
+        }                                                   //설정해준다.
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : RecyclerView.ViewHolder {
+
+            val view: View?
+            return when (viewType) {    //viewType 에 따라 다르게 할당
+                1 -> {
+                    view = LayoutInflater.from(parent.context).inflate(
+                        R.layout.list_item_crime,
+                        parent,
+                        false
+                    )
+                    CrimeHolder1(view)
+                }
+                else -> {
+                    view = LayoutInflater.from(parent.context).inflate(
+                        R.layout.list_item_crime_police,
+                        parent,
+                        false
+                    )
+                    CrimeHolder2(view)
+                }
+            }
+        }   //onCreate
+
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) { //바인딩
+            when(crimes[position].requiresPolice) {
+                1 -> {
+                    (holder as CrimeHolder1).bind(crimes[position])
+                    holder.setIsRecyclable(false)
+                }
+                else -> {
+                    (holder as CrimeHolder2).bind(crimes[position])
+                    holder.setIsRecyclable(false)
+                }
+            }
+        }
         override fun getItemCount() = crimes.size   //사이즈 반환
     }
 
