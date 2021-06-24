@@ -10,7 +10,7 @@ class CrimeListViewModel : ViewModel() {
         for (i in 0 until 100) {
             val crime = Crime()
             crime.title = "Crime #$i"
-            crime.isSolved = i%2 == 0
+            crime.isSolved = i%3 == 0
             if (i % 2 == 0) crime.requiresPolice = 2    //2이면 police 버튼 생성
             crimes += crime
         }
