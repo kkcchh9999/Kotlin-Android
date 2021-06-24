@@ -35,7 +35,7 @@ class CrimeFragment : Fragment() {
         solvedCheckBox = view.findViewById(R.id.crime_solved) as CheckBox
 
         dateButton.apply {
-            text = crime.date
+            text = crime.date.toString()
             isEnabled = false
         }
 
@@ -62,7 +62,7 @@ class CrimeFragment : Fragment() {
         titleField.addTextChangedListener(titleWatcher)
 
         solvedCheckBox.apply {
-            setOnCheckedChangeListener { _, ischecked ->
+            setOnCheckedChangeListener { _, isChecked ->
                 crime.isSolved = isChecked
             }
         }
