@@ -84,7 +84,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragme
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                crime.title == s.toString()
+                crime.title = s.toString()
             }
 
             override fun afterTextChanged(s: Editable?) {
