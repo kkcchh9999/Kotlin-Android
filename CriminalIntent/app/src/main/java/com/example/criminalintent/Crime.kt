@@ -9,5 +9,6 @@ import java.util.*
 data class Crime(@PrimaryKey val id: UUID = UUID.randomUUID(),       //임의의 아이디 값을 생성, 부여, primaryKey 설정
                  var title: String = "",
                  var date: Date = Date(),
-                 var isSolved: Boolean = false
+                 var isSolved: Boolean = false,
+                 var suspect: String = ""
 )
