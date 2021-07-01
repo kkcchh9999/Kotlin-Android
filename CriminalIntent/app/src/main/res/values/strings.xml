@@ -6,4 +6,5 @@
     <string name="crime_solved_label">해결됨</string>
     <string name="call_police">Police</string>
     <string name="new_crime">새로운 범죄</string>
+    <string name="no_crime">범죄 데이터 없음</string>
 </resources>

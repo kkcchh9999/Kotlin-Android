@@ -4,10 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +24,8 @@ class CrimeListFragment : Fragment(){
 
     private lateinit var crimeRecyclerView: RecyclerView
     private var adapter: CrimeAdapter? = CrimeAdapter(emptyList())
+    private lateinit var noCrimeTextView: TextView
+    private lateinit var addCrimeButton: ImageButton
     private val crimeListViewModel : CrimeListViewModel by lazy {
         ViewModelProvider(this).get(CrimeListViewModel::class.java)
     }
@@ -57,8 +56,21 @@ class CrimeListFragment : Fragment(){
     }
 
     private fun updateUI(crimes: List<Crime>) {
-        adapter = CrimeAdapter(crimes)          //어댑터 생성
-        crimeRecyclerView.adapter = adapter     //어댑터와 리사이클러뷰 연결
+
+        if (crimes.isEmpty()) {
+            noCrimeTextView = view?.findViewById(R.id.no_crime_text) as TextView
+            noCrimeTextView.visibility = View.VISIBLE
+            addCrimeButton = view?.findViewById(R.id.add_crime_button) as ImageButton
+            addCrimeButton.visibility = View.VISIBLE
+            addCrimeButton.setOnClickListener {
+                val crime = Crime()
+                crimeListViewModel.addCrime(crime)
+                callbacks?.onCrimeSelected(crime.id)
+            }
+        } else {
+            adapter = CrimeAdapter(crimes)          //어댑터 생성
+            crimeRecyclerView.adapter = adapter     //어댑터와 리사이클러뷰 연결
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
