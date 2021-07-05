@@ -45,7 +45,7 @@ class QuizViewModel : ViewModel() {
 
     var currentQuestionScore: Boolean
         get() = questionBank[currentIndex].score
-        set(value) { questionBank[currentIndex].score = true }
+        set(value: Boolean) { questionBank[currentIndex].score = value }
 
     fun moveToNext() {
         currentIndex = (currentIndex + 1) % questionBank.size
