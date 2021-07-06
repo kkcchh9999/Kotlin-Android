@@ -3,7 +3,12 @@
     <string name="btn_true">TRUE</string>
     <string name="btn_false">FALSE</string>
 
-    <string name="quiz_text">캔버라는 호주의 수도이다.</string>
+    <string name="quiz_australia">캔버라는 호주의 수도이다.</string>
+    <string name="quiz_oceans">태평양은 대서양보다 더 크다.</string>
+    <string name="quiz_mideast">수에즈 운하는 홍해와 인도양을 연결한다.</string>
+    <string name="quiz_africa">나일강은 이집트에서 시작된다.</string>
+    <string name="quiz_america">아마존강은 아프리카 대륙에서 가장 긴 강이다.</string>
+    <string name="quiz_asia">바이칼 호수는 세계에서 가장 오래되고 깊은 담수호이다.</string>
 
     <string name="correct_message">정답!</string>
     <string name="incorrect_message">땡!</string>
