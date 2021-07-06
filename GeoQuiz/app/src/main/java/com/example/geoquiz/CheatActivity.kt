@@ -26,6 +26,7 @@ class CheatActivity : AppCompatActivity() {
 
         answerTextView = findViewById(R.id.answer_text_view)
         showAnswerButton = findViewById(R.id.show_answer_button)
+
         showAnswerButton.setOnClickListener {
             val answerText = when {
                 answerIsTrue -> R.string.true_button

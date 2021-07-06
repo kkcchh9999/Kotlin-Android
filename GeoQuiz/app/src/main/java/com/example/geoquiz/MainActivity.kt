@@ -105,7 +105,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
         updateQuestion()
     }
 
