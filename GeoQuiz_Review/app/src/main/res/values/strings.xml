@@ -2,6 +2,9 @@
     <string name="app_name">GeoQuiz_Review</string>
     <string name="btn_true">TRUE</string>
     <string name="btn_false">FALSE</string>
+    <string name="btn_cheat">커닝하기!</string>
+    <string name="warning_text">정말로 답을 보시겠습니까?</string>
+    <string name="show_answer">정답 보기</string>
 
     <string name="quiz_australia">캔버라는 호주의 수도이다.</string>
     <string name="quiz_oceans">태평양은 대서양보다 더 크다.</string>
@@ -12,6 +15,7 @@
 
     <string name="correct_message">정답!</string>
     <string name="incorrect_message">땡!</string>
-    <string name="correct_cheated">커닝해서 맞춘 문제...</string>
-    <string name="incorrect_cheated">커닝을 해도 틀리는...</string>
+    <string name="correct_cheated">커닝해서 맞춘 문제</string>
+    <string name="incorrect_cheated">커닝을 해도 틀리다니</string>
+
 </resources>

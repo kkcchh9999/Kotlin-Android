@@ -1,5 +1,6 @@
 package com.example.geoquiz_review
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnFalse: Button
     private lateinit var btnNext: ImageButton
     private lateinit var btnPrevious: ImageButton
+    private lateinit var btnCheat: Button
     //----- 뷰모델 추가하기 -----
     private val quizViewModel: QuizViewModel by lazy {
         ViewModelProvider(this).get(QuizViewModel::class.java)
@@ -46,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         tvQuiz = findViewById(R.id.tv_quiz)
         btnNext = findViewById(R.id.btn_next)
         btnPrevious = findViewById(R.id.btn_previous)
+        btnCheat = findViewById(R.id.btn_cheat)
 
         //----- 이벤트 리스너 -----
         btnTrue.setOnClickListener {
@@ -67,6 +70,14 @@ class MainActivity : AppCompatActivity() {
             quizViewModel.previousQuiz()
             updateUI()
         }
+
+        btnCheat.setOnClickListener {
+            val answerIsTrue = quizViewModel.currentQuizAnswer
+            val intent = Intent(this, CheatActivity::class.java)
+            intent.putExtra("ANSWER", answerIsTrue)
+            startActivity(intent)
+        }
+
         updateUI()
     }
 
