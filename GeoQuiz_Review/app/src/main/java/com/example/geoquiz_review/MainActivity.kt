@@ -2,12 +2,18 @@ package com.example.geoquiz_review
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+
+private const val KEY_INDEX = "index"
+private const val KEY_POINT = "point"
+private const val KEY_INPUT = "Input"
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,22 +22,23 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnFalse: Button
     private lateinit var btnNext: ImageButton
     private lateinit var btnPrevious: ImageButton
-
-    private val quizList = listOf(
-        Quiz(R.string.quiz_australia, true),
-        Quiz(R.string.quiz_oceans, true),
-        Quiz(R.string.quiz_mideast, false),
-        Quiz(R.string.quiz_africa, false),
-        Quiz(R.string.quiz_america, true),
-        Quiz(R.string.quiz_asia, true)
-    )
-    private var currentIndex = 0
-    private var userInputCount = 0.0    //----- chap3 챌린지 2 점수 표기하기 -----
-    private var userCorrectCount = 0    //----- chap3 챌린지 2 점수 표기하기 -----
+    //----- 뷰모델 추가하기 -----
+    private val quizViewModel: QuizViewModel by lazy {
+        ViewModelProvider(this).get(QuizViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //----- onSaveInstanceState 에서 저장한 내용이 있는지 체크하여 불러오기 -----
+        val currentIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
+        val point = savedInstanceState?.getInt(KEY_POINT, 0) ?: 0
+        val userInput = savedInstanceState?.getDouble(KEY_INPUT, 0.0) ?: 0.0
+        quizViewModel.currentIndex = currentIndex
+        quizViewModel.point = point
+        quizViewModel.userInput = userInput
+
 
         //----- findViewById -----
         btnTrue = findViewById(R.id.btn_true)
@@ -42,36 +49,40 @@ class MainActivity : AppCompatActivity() {
 
         //----- 이벤트 리스너 -----
         btnTrue.setOnClickListener {
-            userInputCount ++   //----- chap3 챌린지 2 점수 표기하기 -----
+            quizViewModel.userInput++   //----- chap3 챌린지 2 점수 표기하기 -----
             checkAnswer(true)
         }
 
         btnFalse.setOnClickListener {
-            userInputCount ++   //----- chap3 챌린지 2 점수 표기하기 -----
+            quizViewModel.userInput++ //----- chap3 챌린지 2 점수 표기하기 -----
             checkAnswer(false)
         }
 
         btnNext.setOnClickListener {
-            currentIndex = (currentIndex + 1) % quizList.size
+            quizViewModel.nextQuiz()
             updateUI()
         }
 
         btnPrevious.setOnClickListener {
-            currentIndex = if (currentIndex != 0) {
-                (currentIndex - 1) % quizList.size
-            } else {
-                5
-            }
+            quizViewModel.previousQuiz()
             updateUI()
         }
         updateUI()
     }
 
+    //---- onSaveInstanceState 저장된 상태 -----
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        outState.putInt(KEY_INDEX, quizViewModel.currentIndex)      //번들 객체로 자신의 상태를 저장하는 부분에 currentIndex 를 추가함.
+        outState.putInt(KEY_POINT, quizViewModel.point)             //마찬가지 챌린지에서 필요한 요소들도 추가
+        outState.putDouble(KEY_INPUT, quizViewModel.userInput)
+    }
+
     //----- UI 업데이트 -----
     private fun updateUI() {
-        tvQuiz.setText(quizList[currentIndex].textResID)
+        tvQuiz.setText(quizViewModel.currentQuiz)
         //----- chap3 챌린지1 맞춘 문제 true, false 버튼 안보이게하기 -----
-        if (quizList[currentIndex].correctCount) {
+        if (quizViewModel.currentQuizIsCorrect) {
             btnTrue.visibility = View.INVISIBLE
             btnFalse.visibility = View.INVISIBLE
         } else {
@@ -81,15 +92,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer (userAnswer: Boolean) {
-        if (quizList[currentIndex].answer == userAnswer) {
+        if (quizViewModel.currentQuizAnswer == userAnswer) {
             Toast.makeText(
                 this,
                 R.string.correct_message,
                 Toast.LENGTH_SHORT
             ).show()
-            quizList[currentIndex].correctCount = true  //----- chap3 챌린지1 맞춘 문제 true, false 버튼 안보이게하기 -----
-            currentIndex = (currentIndex + 1) % quizList.size
-            userCorrectCount ++ //----- chap3 챌린지 2 점수 표기하기 -----
+            quizViewModel.currentQuizIsCorrect = true  //----- chap3 챌린지1 맞춘 문제 true, false 버튼 안보이게하기 -----
+            quizViewModel.nextQuiz()
+            quizViewModel.point++ //----- chap3 챌린지 2 점수 표기하기 -----
             updateUI()
         } else {
             Toast.makeText(
@@ -99,13 +110,13 @@ class MainActivity : AppCompatActivity() {
             ).show()
         }
         //----- chap3 챌린지 2 점수 표기하기 -----
-        if (userCorrectCount == quizList.size) {
+        if (quizViewModel.point == quizViewModel.quizListSize) {
+            val score = quizViewModel.returnScore()
             Toast.makeText(
                 this,
-                "정답률: " + userCorrectCount / userInputCount * 100 + "%",
+                "정답률: $score%",
                 Toast.LENGTH_SHORT
             ).show()
-            Log.d("이게무슨일이야", "정답카운터"+userCorrectCount+"인풋카운터"+userInputCount)
         }
     }
 }
