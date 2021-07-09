@@ -1,5 +1,6 @@
 package com.example.geoquiz_review
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,7 +15,9 @@ import androidx.lifecycle.ViewModelProvider
 
 private const val KEY_INDEX = "index"
 private const val KEY_POINT = "point"
-private const val KEY_INPUT = "Input"
+private const val KEY_INPUT = "input"
+private const val KEY_CHEAT = "quiz"
+private const val REQUEST_CODE_CHEAT = 0
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,10 +40,13 @@ class MainActivity : AppCompatActivity() {
         val currentIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
         val point = savedInstanceState?.getInt(KEY_POINT, 0) ?: 0
         val userInput = savedInstanceState?.getDouble(KEY_INPUT, 0.0) ?: 0.0
+        val isCheater = savedInstanceState?.getBoolean(KEY_CHEAT, false) ?: false
         quizViewModel.currentIndex = currentIndex
         quizViewModel.point = point
         quizViewModel.userInput = userInput
+        quizViewModel.isCheater = isCheater
 
+        Log.d("이건또 왜이럼", "currentIndex $currentIndex point $point")
 
         //----- findViewById -----
         btnTrue = findViewById(R.id.btn_true)
@@ -75,18 +81,33 @@ class MainActivity : AppCompatActivity() {
             val answerIsTrue = quizViewModel.currentQuizAnswer
             val intent = Intent(this, CheatActivity::class.java)
             intent.putExtra("ANSWER", answerIsTrue)
-            startActivity(intent)
+            startActivityForResult(intent, REQUEST_CODE_CHEAT)  //onActivityResult 를 위해 requestCode
         }
 
         updateUI()
     }
 
     //---- onSaveInstanceState 저장된 상태 -----
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
-        outState.putInt(KEY_INDEX, quizViewModel.currentIndex)      //번들 객체로 자신의 상태를 저장하는 부분에 currentIndex 를 추가함.
-        outState.putInt(KEY_POINT, quizViewModel.point)             //마찬가지 챌린지에서 필요한 요소들도 추가
-        outState.putDouble(KEY_INPUT, quizViewModel.userInput)
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+        savedInstanceState.putInt(KEY_INDEX, quizViewModel.currentIndex)      //번들 객체로 자신의 상태를 저장하는 부분에 currentIndex 를 추가함.
+        savedInstanceState.putInt(KEY_POINT, quizViewModel.point)             //마찬가지 챌린지에서 필요한 요소들도 추가
+        savedInstanceState.putDouble(KEY_INPUT, quizViewModel.userInput)
+        savedInstanceState.putBoolean(KEY_CHEAT, quizViewModel.isCheater)
+    }
+
+    //----- 다른 액티비티의 결과로 진행되는 부분 -----
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode != Activity.RESULT_OK) {
+            return
+        }
+
+        if (requestCode == REQUEST_CODE_CHEAT) {
+            quizViewModel.isCheater =
+                data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
+        }
     }
 
     //----- UI 업데이트 -----
@@ -103,22 +124,38 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer (userAnswer: Boolean) {
-        if (quizViewModel.currentQuizAnswer == userAnswer) {
-            Toast.makeText(
-                this,
-                R.string.correct_message,
-                Toast.LENGTH_SHORT
-            ).show()
+        if (quizViewModel.currentQuizAnswer == userAnswer ) {
+            if (!quizViewModel.isCheater) {
+                Toast.makeText(
+                    this,
+                    R.string.correct_message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    this,
+                    R.string.correct_cheated,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
             quizViewModel.currentQuizIsCorrect = true  //----- chap3 챌린지1 맞춘 문제 true, false 버튼 안보이게하기 -----
             quizViewModel.nextQuiz()
             quizViewModel.point++ //----- chap3 챌린지 2 점수 표기하기 -----
             updateUI()
         } else {
-            Toast.makeText(
-                this,
-                R.string.incorrect_message,
-                Toast.LENGTH_SHORT
-            ).show()
+            if (!quizViewModel.isCheater) {
+                Toast.makeText(
+                    this,
+                    R.string.incorrect_message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    this,
+                    R.string.incorrect_cheated,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
         //----- chap3 챌린지 2 점수 표기하기 -----
         if (quizViewModel.point == quizViewModel.quizListSize) {

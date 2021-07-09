@@ -1,5 +1,6 @@
 package com.example.geoquiz_review
 
+import android.text.BoringLayout
 import androidx.lifecycle.ViewModel
 
 class QuizViewModel : ViewModel() {
@@ -31,6 +32,11 @@ class QuizViewModel : ViewModel() {
             quizList[currentIndex].isCorrect = input
         }
 
+    var isCheater: Boolean
+        get() = quizList[currentIndex].isCheated
+        set(value: Boolean) {
+            quizList[currentIndex].isCheated = value
+        }
     fun nextQuiz() {
         currentIndex = (currentIndex + 1) % quizList.size
     }
