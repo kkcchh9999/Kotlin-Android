@@ -16,6 +16,7 @@ class QuizViewModel : ViewModel() {
     var currentIndex = 0
     var userInput = 0.0    //----- chap3 챌린지 2 점수 표기하기 -----
     var point = 0    //----- chap3 챌린지 2 점수 표기하기 -----
+    var cheatCount = 0  //----- chap7 챌린지 커닝 3회 제한하기 -----
 
     val currentQuizAnswer: Boolean
         get() = quizList[currentIndex].answer
@@ -26,7 +27,7 @@ class QuizViewModel : ViewModel() {
     val quizListSize: Int
         get() = quizList.size
 
-    var currentQuizIsCorrect: Boolean
+    var currentQuizIsCorrect: Boolean       //chap6 챌린지, 커닝 여부 각각 설정하기
         get() = quizList[currentIndex].isCorrect
         set(input: Boolean) {
             quizList[currentIndex].isCorrect = input

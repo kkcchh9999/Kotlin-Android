@@ -107,6 +107,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE_CHEAT) {
             quizViewModel.isCheater =
                 data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
+            quizViewModel.cheatCount ++  //----- chap7 챌린지 커닝 3회 제한하기 -----
         }
     }
 
@@ -120,6 +121,10 @@ class MainActivity : AppCompatActivity() {
         } else {
             btnTrue.visibility = View.VISIBLE
             btnFalse.visibility = View.VISIBLE
+        }
+        //----- chap7 챌린지 커닝 3회 제한하기 -----
+        if (quizViewModel.cheatCount >= 3) {
+            btnCheat.visibility = View.INVISIBLE
         }
     }
 
