@@ -4,9 +4,9 @@
     <string name="crime_title_label">제목</string>
     <string name="crime_details_label">상세 내역</string>
     <string name="crime_solved_label">해결됨</string>
-    <string name="call_police">Police</string>
+    <string name="call_police" translatable="false">Police</string>
     <string name="new_crime">새로운 범죄</string>
-    <string name="no_crime">범죄 데이터 없음</string>
+    <string name="no_crime" translatable="false">범죄 데이터 없음</string>
     <string name="crime_suspect_text">용의자 선택</string>
     <string name="crime_report_text">범죄 보고서 전송</string>
     <string name="crime_report">%1$s!
