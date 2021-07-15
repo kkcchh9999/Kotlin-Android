@@ -1,6 +1,7 @@
 package com.example.criminalintent_review
 
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,7 +57,8 @@ class CrimeListFragment : Fragment() {
         fun bind(crime: Crime) {
             this.crime = crime
             titleTextView.text = this.crime.title
-            dateTextView.text = this.crime.date.toString()
+            //chap10 챌린지 DateFormat 사용하기, 날짜 형식 편집 -> DateFormat.format("원하는 형식", date)
+            dateTextView.text = DateFormat.format("EEE, MMM, dd, yyyy hh:mm", this.crime.date)
             solvedImage.visibility = if (crime.isSolved) {
                 View.VISIBLE
             } else {
