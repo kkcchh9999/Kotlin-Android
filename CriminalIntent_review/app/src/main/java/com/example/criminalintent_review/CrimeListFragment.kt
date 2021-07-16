@@ -1,7 +1,9 @@
 package com.example.criminalintent_review
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,15 +19,11 @@ import androidx.recyclerview.widget.RecyclerView
 class CrimeListFragment : Fragment() {
 
     private lateinit var crimeRecyclerView: RecyclerView
-    private var adapter: CrimeAdapter? = null
+    private var adapter: CrimeAdapter? = CrimeAdapter(emptyList())
+    //빈 리스트를 가지고 있다가 라이브 데이터가 반환되면 내용을 교체
 
     private val crimeListViewModel: CrimeListViewModel by lazy {
         ViewModelProvider(this).get(CrimeListViewModel::class.java)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -36,10 +35,23 @@ class CrimeListFragment : Fragment() {
 
         crimeRecyclerView = view.findViewById(R.id.crime_recycler_view) as RecyclerView
         crimeRecyclerView.layoutManager = LinearLayoutManager(context)      //리사이클러뷰의 레이아웃 매니저, 해당 부분을 다른 레이아웃 매니저를 사용하면 모양을 바꿀 수 있음음
+        crimeRecyclerView.adapter = adapter
 
-        updateUI()  //RecyclerView adapter 에 viewModel 의 list 를 입력하여 호출
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        crimeListViewModel.crimeListLiveData.observe(   //옵저버 등록을 위해 사용하는 함수
+            viewLifecycleOwner, //이 인자를 통해 뷰의 생명주기를 알 수 있고,
+            Observer { crimes ->    //옵저버는 뷰가 유효할 때만 작동
+                crimes?.let {
+                    Log.i(TAG, "GotCrimes ${crimes.size}")
+                    updateUI(crimes)
+                }
+            }
+        )
     }
 
     private inner class CrimeHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
@@ -110,8 +122,7 @@ class CrimeListFragment : Fragment() {
         }
     }
 
-    private fun updateUI() {
-        val crimes = crimeListViewModel.crimes
+    private fun updateUI(crimes: List<Crime>) { //라이브 데이터 관찰로 변경
         adapter = CrimeAdapter(crimes)
         crimeRecyclerView.adapter = adapter
     }
