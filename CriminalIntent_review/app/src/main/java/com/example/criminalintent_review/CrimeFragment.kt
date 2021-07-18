@@ -3,6 +3,8 @@ package com.example.criminalintent_review
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,10 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import java.util.*
+
+private const val ARG_CRIME_ID = "crime_id"
 
 class CrimeFragment : Fragment() {
 
@@ -17,13 +23,17 @@ class CrimeFragment : Fragment() {
     private lateinit var titleField: EditText
     private lateinit var dateButton: Button
     private lateinit var solvedCheckBox: CheckBox
-
+    private val crimeDetailViewModel: CrimeDetailViewModel by lazy {
+        ViewModelProvider(this).get(CrimeDetailViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //fragment 에서는 view 를 inflate 하지 않는다 = setContentView(R.layout.activity_main) 선언 X
         //view 는 onCreateView 에서 구성
         crime = Crime()
+        val crimeID: UUID = arguments?.getSerializable(ARG_CRIME_ID) as UUID    //UUID 가져오기
+        crimeDetailViewModel.loadCrime(crimeID)
     }
 
     override fun onCreateView(
@@ -43,6 +53,19 @@ class CrimeFragment : Fragment() {
         }
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        crimeDetailViewModel.crimeLiveData.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer { crime ->
+                crime?.let{
+                    this.crime = crime
+                    updateUI()
+                }
+            }
+        )
     }
 
     override fun onStart() {
@@ -67,6 +90,29 @@ class CrimeFragment : Fragment() {
         solvedCheckBox.apply {
             setOnCheckedChangeListener { _, isChecked ->    //view, boolean 두 인자를 받아서 사용, _는 필요없어서 생략한다는 의미
                 crime.isSolved = isChecked                  //checkBox 에서 체크되었는지 여부에 따라 crime.isSolved 를 변경함
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        crimeDetailViewModel.saveCrime(crime)
+    }
+
+    private fun updateUI() {
+        titleField.setText(crime.title)
+        dateButton.text = DateFormat.format("EEE, MMM, dd, yyyy hh:mm", this.crime.date)
+        solvedCheckBox.isChecked = crime.isSolved
+    }
+
+    companion object {
+
+        fun newInstance(crimeID: UUID): CrimeFragment {
+            val args = Bundle().apply {
+                putSerializable(ARG_CRIME_ID, crimeID)
+            }
+            return CrimeFragment().apply {
+                arguments = args    //Fragment 의 속성인 argument 는 setter 를 자동으로 호출, 따라서 setArguments(args) 와 같다.
             }
         }
     }

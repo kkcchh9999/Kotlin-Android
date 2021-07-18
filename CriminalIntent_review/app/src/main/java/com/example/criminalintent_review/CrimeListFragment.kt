@@ -1,6 +1,7 @@
 package com.example.criminalintent_review
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.util.Log
@@ -15,15 +16,28 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.*
 
 class CrimeListFragment : Fragment() {
+    /**
+     * 호스팅 액티비티에서 구현할 인터페이스
+     * 해당 프래그먼트를 사용하기위해서는 항상 구현해 주어야 함.
+     */
+    interface Callbacks {
+        fun onCrimeSelected(crimeId: UUID)
+    }
+    private var callbacks: Callbacks? = null    //callbacks
+
 
     private lateinit var crimeRecyclerView: RecyclerView
-    private var adapter: CrimeAdapter? = CrimeAdapter(emptyList())
-    //빈 리스트를 가지고 있다가 라이브 데이터가 반환되면 내용을 교체
-
+    private var adapter: CrimeAdapter? = CrimeAdapter(emptyList())    //빈 리스트를 가지고 있다가 라이브 데이터가 반환되면 내용을 교체
     private val crimeListViewModel: CrimeListViewModel by lazy {
         ViewModelProvider(this).get(CrimeListViewModel::class.java)
+    }
+
+    override fun onAttach(context: Context) {   //fragment 가 호스팅 activity 에 연결될 때 호출됨 <-> onDetach
+        super.onAttach(context)                 //context 가 activity 보다 큰 개념임으로 context 를 사용하는것이 유연함
+        callbacks = context as Callbacks?       //callbacks 를 호스팅 activity 에서 구현한 callbacks 로 설정
     }
 
     override fun onCreateView(
@@ -54,6 +68,11 @@ class CrimeListFragment : Fragment() {
         )
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
+
     private inner class CrimeHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
         private lateinit var crime: Crime
@@ -79,12 +98,8 @@ class CrimeListFragment : Fragment() {
         }
 
         override fun onClick(v: View?) {
-            Toast.makeText(
-                context,
-                "${crime.title} pressed!",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+            callbacks?.onCrimeSelected(crime.id)    //callbacks 가 설정되었다면 onCrimeSelected 실행, UUID 인자로
+        }                                           //이 함수는 호스트 activity 에서 구현.
     }
 
     private inner class CrimeAdapter(var crimes: List<Crime>) : RecyclerView.Adapter<CrimeHolder>() {

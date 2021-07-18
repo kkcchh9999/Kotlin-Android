@@ -6,6 +6,7 @@ import androidx.room.Room
 import com.example.criminalintent_review.DB.CrimeDatabase
 import java.lang.IllegalStateException
 import java.util.*
+import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "crime-database"
 
@@ -19,10 +20,21 @@ class CrimeRepository private constructor(context: Context){
         DATABASE_NAME
     ).build()
     private val crimeDao = database.crimeDao()
+    private val executor = Executors.newSingleThreadExecutor()
 
     //dao 의 함수들을 이용하기 위해 함수 선언
     fun getCrimes(): LiveData<List<Crime>> = crimeDao.getCrimes()
     fun getCrime(uuid: UUID): LiveData<Crime?> = crimeDao.getCrime(uuid)
+    fun updateCrime(crime: Crime) {
+        executor.execute {
+            crimeDao.updateCrime(crime)
+        }
+    }
+    fun addCrime(crime: Crime) {
+        executor.execute {
+            crimeDao.addCrime(crime)
+        }
+    }
 
     //CrimeRepo 는 싱글톤, 즉 앱 실행중 하나만 생성 -> init 은 최초생성, get 은 기존의 인스턴스 반환
     //private constructor 로 선언하여 init 함수를 호출하지 않고는 인스턴스 생성 불가능
