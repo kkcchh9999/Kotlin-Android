@@ -74,7 +74,7 @@ class CrimeListFragment : Fragment() {
             solvedImage.visibility = if (crime.isSolved) {
                 View.VISIBLE
             } else {
-                View.INVISIBLE
+                View.GONE
             }
         }
 
@@ -91,24 +91,11 @@ class CrimeListFragment : Fragment() {
         //리사이클러뷰는 onCreateViewHolder 로 뷰홀더를 생성하고 난 이후에는 onBind 만 호출해서 내용을 바꿔가며 보여줌 -> Recycle 재활용
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CrimeHolder {
-            return if (viewType == 1) {         //chap9 챌린지, 리사이클러뷰의 뷰를 다르게 사용하기
-                val view = layoutInflater.inflate(R.layout.list_item_crime, parent, false)
-                CrimeHolder(view)               //viewHolder 를 생성하면 유사한게 아닌 전혀 다른 형태 또한 사용 가능함.
-            } else {
-                val view = layoutInflater.inflate(R.layout.list_item_crime_police, parent, false)
-                CrimeHolder(view)
-            }
-
+            val view = layoutInflater.inflate(R.layout.list_item_crime, parent, false)
+            return CrimeHolder(view)               //viewHolder 를 생성하면 유사한게 아닌 전혀 다른 형태 또한 사용 가능함.
         }
 
         override fun getItemCount() = crimes.size
-
-        override fun getItemViewType(position: Int): Int {  //해당 함수로 viewType 를 설정함
-            return when(crimes[position].requirePolice) {
-                true -> 1
-                false -> 2
-            }
-        }
 
         override fun onBindViewHolder(holder: CrimeHolder, position: Int) {
             val crime = crimes[position]
