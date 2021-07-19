@@ -16,8 +16,10 @@ import androidx.lifecycle.ViewModelProvider
 import java.util.*
 
 private const val ARG_CRIME_ID = "crime_id"
+private const val DIALOG_DATE = "DialogDate"
+private const val REQUEST_DATE = 0
 
-class CrimeFragment : Fragment() {
+class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
 
     private lateinit var crime: Crime
     private lateinit var titleField: EditText
@@ -46,11 +48,6 @@ class CrimeFragment : Fragment() {
         titleField = view.findViewById(R.id.crime_title) as EditText
         dateButton = view.findViewById(R.id.crime_date) as Button
         solvedCheckBox = view.findViewById(R.id.crime_solved) as CheckBox
-
-        dateButton.apply {
-            text = crime.date.toString()    //버튼의 텍스트는 날짜
-            isEnabled = false               //버튼 비활성화
-        }
 
         return view
     }
@@ -92,11 +89,23 @@ class CrimeFragment : Fragment() {
                 crime.isSolved = isChecked                  //checkBox 에서 체크되었는지 여부에 따라 crime.isSolved 를 변경함
             }
         }
+
+        dateButton.setOnClickListener {
+            DatePickerFragment.newInstance(crime.date).apply{
+                setTargetFragment(this@CrimeFragment, REQUEST_DATE)
+                show(this@CrimeFragment.parentFragmentManager, DIALOG_DATE)
+            }
+        }
     }
 
     override fun onStop() {
         super.onStop()
         crimeDetailViewModel.saveCrime(crime)
+    }
+
+    override fun onDateSelected(date: Date) {   //DatePickerDialog 의 Callbacks 구현
+        crime.date = date
+        updateUI()
     }
 
     private fun updateUI() {
