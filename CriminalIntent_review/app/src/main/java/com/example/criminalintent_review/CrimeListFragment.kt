@@ -5,12 +5,12 @@ import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -34,10 +34,17 @@ class CrimeListFragment : Fragment() {
     private val crimeListViewModel: CrimeListViewModel by lazy {
         ViewModelProvider(this).get(CrimeListViewModel::class.java)
     }
+    private lateinit var noCrime: TextView
+    private lateinit var noCrimeAdd: ImageButton
 
     override fun onAttach(context: Context) {   //fragment 가 호스팅 activity 에 연결될 때 호출됨 <-> onDetach
         super.onAttach(context)                 //context 가 activity 보다 큰 개념임으로 context 를 사용하는것이 유연함
         callbacks = context as Callbacks?       //callbacks 를 호스팅 activity 에서 구현한 callbacks 로 설정
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true) //메뉴가 존재함을 알려줌
     }
 
     override fun onCreateView(
@@ -51,6 +58,8 @@ class CrimeListFragment : Fragment() {
         crimeRecyclerView.layoutManager = LinearLayoutManager(context)      //리사이클러뷰의 레이아웃 매니저, 해당 부분을 다른 레이아웃 매니저를 사용하면 모양을 바꿀 수 있음음
         crimeRecyclerView.adapter = adapter
 
+        noCrime = view.findViewById(R.id.no_crime) as TextView
+        noCrimeAdd = view.findViewById(R.id.no_crime_add) as ImageButton
 
         return view
     }
@@ -71,6 +80,23 @@ class CrimeListFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         callbacks = null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {  //메뉴가 있을 때 호출해서 사용
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_crime_list, menu)  //리소스 아이디로
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.new_crime -> {
+                val crime = Crime()
+                crimeListViewModel.addCrime(crime)
+                callbacks?.onCrimeSelected(crime.id)
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
     private inner class CrimeHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
@@ -125,7 +151,19 @@ class CrimeListFragment : Fragment() {
     }
 
     private fun updateUI(crimes: List<Crime>) { //라이브 데이터 관찰로 변경
-        adapter = CrimeAdapter(crimes)
-        crimeRecyclerView.adapter = adapter
+        if (crimes.isEmpty()) {
+            noCrime.visibility = View.VISIBLE
+            noCrimeAdd.visibility = View.VISIBLE
+
+            noCrimeAdd.setOnClickListener {
+                val crime = Crime()
+                crimeListViewModel.addCrime(crime)
+                callbacks?.onCrimeSelected(crime.id)
+            }
+        }
+        else {
+            adapter = CrimeAdapter(crimes)
+            crimeRecyclerView.adapter = adapter
+        }
     }
 }
