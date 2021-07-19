@@ -17,13 +17,16 @@ import java.util.*
 
 private const val ARG_CRIME_ID = "crime_id"
 private const val DIALOG_DATE = "DialogDate"
+private const val DIALOG_TIME = "DialogTime"
 private const val REQUEST_DATE = 0
+private const val REQUEST_TIME = 1
 
-class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
+class CrimeFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragment.Callbacks {
 
     private lateinit var crime: Crime
     private lateinit var titleField: EditText
     private lateinit var dateButton: Button
+    private lateinit var timeButton: Button
     private lateinit var solvedCheckBox: CheckBox
     private val crimeDetailViewModel: CrimeDetailViewModel by lazy {
         ViewModelProvider(this).get(CrimeDetailViewModel::class.java)
@@ -47,6 +50,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
 
         titleField = view.findViewById(R.id.crime_title) as EditText
         dateButton = view.findViewById(R.id.crime_date) as Button
+        timeButton = view.findViewById(R.id.crime_time) as Button
         solvedCheckBox = view.findViewById(R.id.crime_solved) as CheckBox
 
         return view
@@ -96,6 +100,13 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                 show(this@CrimeFragment.parentFragmentManager, DIALOG_DATE)
             }
         }
+
+        timeButton.setOnClickListener {
+            TimePickerFragment.newInstance(crime.date).apply {
+                setTargetFragment(this@CrimeFragment, REQUEST_TIME)
+                show(this@CrimeFragment.parentFragmentManager, DIALOG_TIME)
+            }
+        }
     }
 
     override fun onStop() {
@@ -104,13 +115,19 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
     }
 
     override fun onDateSelected(date: Date) {   //DatePickerDialog 의 Callbacks 구현
+        crime.date = date   //범죄 데이터의 시간을 설정된 시간으로 설정
+        updateUI()          //UI 업데이트
+    }
+
+    override fun onTimeSelected(date: Date) {   //TimePickerDialog 의 Callbacks 구현
         crime.date = date
         updateUI()
     }
 
     private fun updateUI() {
         titleField.setText(crime.title)
-        dateButton.text = DateFormat.format("EEE, MMM, dd, yyyy hh:mm", this.crime.date)
+        dateButton.text = DateFormat.format("EEE, MMM, dd, yyyy", this.crime.date)
+        timeButton.text = DateFormat.format("hh:mm", this.crime.date)
         solvedCheckBox.isChecked = crime.isSolved
     }
 
