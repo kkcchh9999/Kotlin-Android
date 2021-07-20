@@ -1,6 +1,12 @@
 package com.example.criminalintent_review
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
+import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
@@ -20,6 +26,8 @@ private const val DIALOG_DATE = "DialogDate"
 private const val DIALOG_TIME = "DialogTime"
 private const val REQUEST_DATE = 0
 private const val REQUEST_TIME = 1
+private const val DATE_FORMAT = "yyyy년 M월 d일 H시 m분, E요일"
+private const val REQUEST_CONTACT = 2
 
 class CrimeFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragment.Callbacks {
 
@@ -28,6 +36,8 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragme
     private lateinit var dateButton: Button
     private lateinit var timeButton: Button
     private lateinit var solvedCheckBox: CheckBox
+    private lateinit var reportButton: Button
+    private lateinit var suspectButton: Button
     private val crimeDetailViewModel: CrimeDetailViewModel by lazy {
         ViewModelProvider(this).get(CrimeDetailViewModel::class.java)
     }
@@ -52,6 +62,8 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragme
         dateButton = view.findViewById(R.id.crime_date) as Button
         timeButton = view.findViewById(R.id.crime_time) as Button
         solvedCheckBox = view.findViewById(R.id.crime_solved) as CheckBox
+        reportButton = view.findViewById(R.id.crime_report) as Button
+        suspectButton = view.findViewById(R.id.crime_suspect) as Button
 
         return view
     }
@@ -107,6 +119,37 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragme
                 show(this@CrimeFragment.parentFragmentManager, DIALOG_TIME)
             }
         }
+
+        reportButton.setOnClickListener {
+            Intent(Intent.ACTION_SEND).apply {  //SEND 에 해당하는 앱들을 보여줌
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, getCrimeReport())
+                putExtra(
+                    Intent.EXTRA_SUBJECT,
+                    getString(R.string.crime_report_subject)
+                )
+            }.also { intent ->
+                val chooserIntent =
+                    Intent.createChooser(intent, getString(R.string.send_report))
+                startActivity(chooserIntent)
+            }
+        }
+
+        suspectButton.apply {   //연락처 선택 인텐트
+            val pickContactIntent =
+                Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
+            setOnClickListener {
+                startActivityForResult(pickContactIntent, REQUEST_CONTACT)
+            }
+
+            val packageManager: PackageManager = requireActivity().packageManager
+            val resolvedActivity: ResolveInfo? =
+                packageManager.resolveActivity(pickContactIntent,
+                    PackageManager.MATCH_DEFAULT_ONLY)
+            if (resolvedActivity == null) {
+                isEnabled = false
+            }
+        }
     }
 
     override fun onStop() {
@@ -124,11 +167,53 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragme
         updateUI()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when {
+            resultCode != Activity.RESULT_OK -> return
+
+            requestCode == REQUEST_CONTACT && data != null -> {
+                val contactUri: Uri = data.data ?: return
+                val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)   //연락처의 모든 표시명 가져오기
+                val cursor = requireActivity().contentResolver  //이를 읽을 커서 객체
+                    .query(contactUri, queryFields, null, null, null)
+                cursor?.use {
+                    if (it.count == 0) {
+                        return
+                    }
+                    it.moveToFirst()    //커서를 제일 처음으로 옮김
+                    val suspect = it.getString(0)   //getString(0) 첫 번째 열 값 = 이름
+                    crime.suspect = suspect
+                    crimeDetailViewModel.saveCrime(crime)   // 데이터베이스에 저장
+                    suspectButton.text = suspect
+                }
+            }
+        }
+    }
+
     private fun updateUI() {
         titleField.setText(crime.title)
         dateButton.text = DateFormat.format("EEE, MMM, dd, yyyy", this.crime.date)
         timeButton.text = DateFormat.format("hh:mm", this.crime.date)
         solvedCheckBox.isChecked = crime.isSolved
+
+        if(crime.suspect.isNotEmpty()) {    //버튼 텍스트 설정
+            suspectButton.text = crime.suspect
+        }
+    }
+
+    private fun getCrimeReport(): String {
+        val solvedString = if (crime.isSolved) {
+            getString(R.string.crime_report_solved)
+        } else {
+            getString(R.string.crime_report_unsolved)
+        }
+        val dateString = DateFormat.format(DATE_FORMAT, crime.date).toString()
+        val suspect = if (crime.suspect.isBlank()) {
+            getString(R.string.crime_report_no_suspect)
+        } else {
+            getString(R.string.crime_report_suspect, crime.suspect)
+        }
+        return getString(R.string.crime_report,crime.title, dateString, solvedString, suspect)
     }
 
     companion object {

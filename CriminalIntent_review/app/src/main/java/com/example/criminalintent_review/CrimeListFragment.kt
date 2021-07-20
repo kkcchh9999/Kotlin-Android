@@ -162,6 +162,8 @@ class CrimeListFragment : Fragment() {
             }
         }
         else {
+            noCrime.visibility = View.INVISIBLE
+            noCrimeAdd.visibility = View.INVISIBLE
             adapter = CrimeAdapter(crimes)
             crimeRecyclerView.adapter = adapter
         }
