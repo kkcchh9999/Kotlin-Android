@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.example.criminalintent_review.DB.CrimeDatabase
 import com.example.criminalintent_review.DB.migration_1_2
+import java.io.File
 import java.lang.IllegalStateException
 import java.util.*
 import java.util.concurrent.Executors
@@ -23,6 +24,7 @@ class CrimeRepository private constructor(context: Context){
         .build()
     private val crimeDao = database.crimeDao()
     private val executor = Executors.newSingleThreadExecutor()
+    private val filesDir = context.applicationContext.filesDir
 
     //dao 의 함수들을 이용하기 위해 함수 선언
     fun getCrimes(): LiveData<List<Crime>> = crimeDao.getCrimes()
@@ -37,6 +39,8 @@ class CrimeRepository private constructor(context: Context){
             crimeDao.addCrime(crime)
         }
     }
+
+    fun getPhotoFile(crime: Crime): File = File(filesDir, crime.photoFileName)
 
     //CrimeRepo 는 싱글톤, 즉 앱 실행중 하나만 생성 -> init 은 최초생성, get 은 기존의 인스턴스 반환
     //private constructor 로 선언하여 init 함수를 호출하지 않고는 인스턴스 생성 불가능
