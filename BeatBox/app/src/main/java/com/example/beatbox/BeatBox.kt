@@ -62,4 +62,6 @@ class BeatBox(private val assets: AssetManager) {
         val soundId = soundPool.load(afd, 1)
         sound.soundId    = soundId
     }
-}
+}   
+
+//포멧 하고 다시 깃허브 연동
