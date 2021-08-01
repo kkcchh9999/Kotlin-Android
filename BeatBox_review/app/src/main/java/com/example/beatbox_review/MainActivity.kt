@@ -1,12 +1,17 @@
 
 package com.example.beatbox_review
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.GridLayout
 import android.widget.SeekBar
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.beatbox_review.databinding.ActivityMainBinding
@@ -17,13 +22,18 @@ var PLAY_SPEED = 1.0f
 class MainActivity : AppCompatActivity() {
 
     private lateinit var beatBox: BeatBox
-    private lateinit var seekBar: SeekBar
+    private lateinit var beatBoxViewModel: BeatBoxViewModel
 
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        val factoryModel =  BeatBoxFactoryModel(assets)
+        beatBoxViewModel = ViewModelProvider(this, factoryModel).get(BeatBoxViewModel::class.java)
 
         beatBox = BeatBox(assets)
-        seekBar = findViewById(R.id.seekbar)
 
         val binding: ActivityMainBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_main)    //데이터 바인딩 클래스
@@ -33,25 +43,22 @@ class MainActivity : AppCompatActivity() {
             adapter = SoundAdapter(beatBox.sounds)
         }
 
-        seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+        binding.seekbar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                PLAY_SPEED = p1.toFloat()
+                PLAY_SPEED = p0!!.progress/10.toFloat()
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
-                PLAY_SPEED = p0!!.progress.toFloat()
+                PLAY_SPEED = p0!!.progress/10.toFloat()
             }
 
             override fun onStopTrackingTouch(p0: SeekBar?) {
-                PLAY_SPEED = p0!!.progress.toFloat()
+                PLAY_SPEED = p0!!.progress/10.toFloat()
             }
         })
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        beatBox.release()
-    }
+
 
     private inner class SoundHolder(private val binding: ListItemSoundBinding) :
             RecyclerView.ViewHolder(binding.root) {
