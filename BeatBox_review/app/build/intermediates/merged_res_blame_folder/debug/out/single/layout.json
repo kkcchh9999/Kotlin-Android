@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "C:\\AndroidStudio\\BeatBox_review\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_main.xml",
+        "source": "C:\\AndroidStudio\\BeatBox_review\\app\\src\\main\\res\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\AndroidStudio\\BeatBox_review\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\list_item_sound.xml",
+        "source": "C:\\AndroidStudio\\BeatBox_review\\app\\src\\main\\res\\layout\\list_item_sound.xml"
+    }
+]

@@ -1,0 +1,27 @@
+com/example/beatbox_review/DataBindingTriggerClass.java
+ com.example.beatbox_review.DataBindingTriggerClass
+com/example/beatbox_review/databinding/ListItemSoundBinding.java
+ com.example.beatbox_review.databinding.ListItemSoundBinding
+com/example/beatbox_review/databinding/ActivityMainBindingImpl.java
+ com.example.beatbox_review.databinding.ActivityMainBindingImpl
+com/example/beatbox_review/generated/callback/OnClickListener.java
+ com.example.beatbox_review.generated.callback.OnClickListener
+ com.example.beatbox_review.generated.callback.OnClickListener$Listener
+com/example/beatbox_review/DataBinderMapperImpl.java
+ com.example.beatbox_review.DataBinderMapperImpl
+ com.example.beatbox_review.DataBinderMapperImpl$InnerBrLookup
+ com.example.beatbox_review.DataBinderMapperImpl$InnerLayoutIdLookup
+com/example/beatbox_review/BuildConfig.java
+ com.example.beatbox_review.BuildConfig
+com/example/beatbox_review/databinding/ListItemSoundBindingImpl.java
+ com.example.beatbox_review.databinding.ListItemSoundBindingImpl
+androidx/databinding/DataBinderMapperImpl.java
+ androidx.databinding.DataBinderMapperImpl
+androidx/databinding/library/baseAdapters/BR.java
+ androidx.databinding.library.baseAdapters.BR
+com/example/beatbox_review/databinding/ActivityMainBinding.java
+ com.example.beatbox_review.databinding.ActivityMainBinding
+androidx/databinding/DataBindingComponent.java
+ androidx.databinding.DataBindingComponent
+com/example/beatbox_review/BR.java
+ com.example.beatbox_review.BR
