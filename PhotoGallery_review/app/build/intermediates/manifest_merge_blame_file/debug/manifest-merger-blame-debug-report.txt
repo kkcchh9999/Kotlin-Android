@@ -46,6 +46,17 @@
 27-->C:\AndroidStudio\PhotoGallery_review\app\src\main\AndroidManifest.xml:18:27-74
 28            </intent-filter>
 29        </activity>
-30    </application>
-31
-32</manifest>
+30
+31        <provider
+31-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\kkcch\.gradle\caches\transforms-2\files-2.1\e5d134fbda611567bcdf78536fd087e9\lifecycle-process-2.2.0\AndroidManifest.xml:25:9-29:43
+32            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+32-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\kkcch\.gradle\caches\transforms-2\files-2.1\e5d134fbda611567bcdf78536fd087e9\lifecycle-process-2.2.0\AndroidManifest.xml:26:13-79
+33            android:authorities="com.example.photogallery_review.lifecycle-process"
+33-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\kkcch\.gradle\caches\transforms-2\files-2.1\e5d134fbda611567bcdf78536fd087e9\lifecycle-process-2.2.0\AndroidManifest.xml:27:13-69
+34            android:exported="false"
+34-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\kkcch\.gradle\caches\transforms-2\files-2.1\e5d134fbda611567bcdf78536fd087e9\lifecycle-process-2.2.0\AndroidManifest.xml:28:13-37
+35            android:multiprocess="true" />
+35-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\kkcch\.gradle\caches\transforms-2\files-2.1\e5d134fbda611567bcdf78536fd087e9\lifecycle-process-2.2.0\AndroidManifest.xml:29:13-40
+36    </application>
+37
+38</manifest>

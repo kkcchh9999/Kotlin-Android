@@ -1,11 +1,15 @@
 package com.example.photogallery_review
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.photogallery_review.api.FlickrApi
 import com.example.photogallery_review.api.FlickrResponse
 import com.example.photogallery_review.api.PhotoResponse
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -40,8 +44,8 @@ class FlickrFetcher {
                 Log.d(TAG, "Response received: ${response.body()}")
                 val flickrResponse: FlickrResponse? = response.body()
                 val photoResponse: PhotoResponse? = flickrResponse?.photos
-                var galleryItems: List<GalleryItem> = photoResponse?.galleryItems
-                    ?: mutableListOf()
+                var galleryItems: List<GalleryItem> = photoResponse?.galleryItems       //#2 내려받기가 끝나면  List 형태로 LiveData 객체로 전달,
+                    ?: mutableListOf()                                                  //이로써 썸네일 크기의 사진이 있는 URL 을 각 GalleryItem 이 갖게됨
                 galleryItems = galleryItems.filterNot {
                     it.url.isBlank()
                 }
@@ -50,5 +54,14 @@ class FlickrFetcher {
         })
 
         return responseLiveData
+    }
+
+    @WorkerThread   //해당 에노테이션은 백그라운드 스레드에서 호출되어야 함을 나타냄, 다만 백그라운드에서 실행은 직접 해야함
+    fun fetchPhoto(url: String): Bitmap? {
+        val response: Response<ResponseBody> = flickrApi.fetchUrlBytes(url).execute()   //call.execute()
+        val bitmap = response.body()?.byteStream()?.use(BitmapFactory::decodeStream)    //바이트 스트림을 decodeStream 을 통해 비트맵으로 변환
+        Log.i(TAG, "Decoded bitmap=$bitmap from Response=$response")
+
+        return bitmap
     }
 }

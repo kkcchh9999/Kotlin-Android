@@ -1,11 +1,17 @@
 package com.example.photogallery_review
 
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -25,11 +31,22 @@ class PhotoGalleryFragment : Fragment() {
 
     private lateinit var photoRecyclerView: RecyclerView
     private lateinit var photoGalleryViewModel: PhotoGalleryViewModel
+    private lateinit var thumbnailDownloader: ThumbnailDownloader<PhotoHolder>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        retainInstance = true   //화면의 구성 변경이 생길 때도 그 시점의 프래그먼트 인스턴스가 갖고 있던 상태 데이터를 계속 보존 = 유보(retain)
+                                //일반적으로 프래그먼트 유보는 하지 않는것이 좋다고 함.
+
         photoGalleryViewModel = ViewModelProvider(this).get(PhotoGalleryViewModel::class.java)
+        val responseHandler = Handler()
+        thumbnailDownloader =
+            ThumbnailDownloader(responseHandler) { photoHolder, bitmap ->
+                val drawable = BitmapDrawable(resources, bitmap)
+                photoHolder.bindDrawable(drawable)
+            }
+        lifecycle.addObserver(thumbnailDownloader.fragmentLifecycleObserver)
     }
 
     override fun onCreateView(
@@ -37,6 +54,9 @@ class PhotoGalleryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewLifecycleOwner.lifecycle.addObserver(
+            thumbnailDownloader.viewLifecycleObserver
+        )
         val view = inflater.inflate(R.layout.fragment_photo_gallery, container, false)
 
         photoRecyclerView = view.findViewById(R.id.photo_recycler_view)
@@ -55,16 +75,34 @@ class PhotoGalleryFragment : Fragment() {
         )
     }
 
-    private class PhotoHolder(itemTextView: TextView) : RecyclerView.ViewHolder(itemTextView) {
-
-        val bindTitle: (CharSequence) -> Unit = itemTextView::setText
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewLifecycleOwner.lifecycle.removeObserver(
+            thumbnailDownloader.viewLifecycleObserver
+        )
     }
 
-    private class PhotoAdapter(private val galleryItems: List<GalleryItem>) : RecyclerView.Adapter<PhotoHolder>() {
+    override fun onDestroy() {
+        super.onDestroy()
+        lifecycle.removeObserver(
+            thumbnailDownloader.fragmentLifecycleObserver
+        )
+    }
+
+    private class PhotoHolder(private val itemImageView: ImageView) : RecyclerView.ViewHolder(itemImageView) {
+
+        val bindDrawable: (Drawable) -> Unit = itemImageView::setImageDrawable
+    }
+
+    private inner class PhotoAdapter(private val galleryItems: List<GalleryItem>) : RecyclerView.Adapter<PhotoHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoHolder {
-            val textView = TextView(parent.context)
-            return PhotoHolder(textView)
+            val view = layoutInflater.inflate(
+                R.layout.list_item_gallery,
+                parent,
+                false
+            ) as ImageView
+            return PhotoHolder(view)
         }
 
         override fun getItemCount(): Int {
@@ -73,7 +111,13 @@ class PhotoGalleryFragment : Fragment() {
 
         override fun onBindViewHolder(holder: PhotoHolder, position: Int) {
             val galleryItem = galleryItems[position]
-            holder.bindTitle(galleryItem.title)
+            val placeholder: Drawable = ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.loading_picture
+            ) ?: ColorDrawable()
+            holder.bindDrawable(placeholder)
+
+            thumbnailDownloader.queueThumbnail(holder, galleryItem.url)
         }
     }
 
