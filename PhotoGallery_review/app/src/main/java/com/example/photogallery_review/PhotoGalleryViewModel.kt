@@ -1,13 +1,31 @@
 package com.example.photogallery_review
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.*
 
-class PhotoGalleryViewModel : ViewModel() {
+class PhotoGalleryViewModel(private val app: Application) : AndroidViewModel(app) {
 
     val galleryItemLiveData: LiveData<List<GalleryItem>>
 
+    private val flickrFetcher = FlickrFetcher()
+    private val mutableSearchTerm = MutableLiveData<String>()
+
+    val searchTerm: String
+    get() = mutableSearchTerm.value ?: ""
+
     init {
-        galleryItemLiveData = FlickrFetcher().fetchPhotos() //#1 ViewModel 에서 fetchPhotos 를 호출하여 JSON 데이터 내려받음
+        mutableSearchTerm.value = QueryPreferences.getStoredQuery(app)
+        galleryItemLiveData = Transformations.switchMap(mutableSearchTerm) { searchTerm ->
+            if (searchTerm.isBlank()) {
+                flickrFetcher.fetchPhotos()
+            } else {
+                flickrFetcher.searchPhotos(searchTerm)
+            }
+        }//#1 ViewModel 에서 fetchPhotos 를 호출하여 JSON 데이터 내려받음
+    }
+
+    fun fetchPhotos(query: String = "") {
+        QueryPreferences.setStoredQuery(app, query)
+        mutableSearchTerm.value = query
     }
 }

@@ -2080,6 +2080,8 @@ int id material_timepicker_mode_button 0x7f0800f9
 int id material_timepicker_ok_button 0x7f0800fa
 int id material_timepicker_view 0x7f0800fb
 int id material_value_index 0x7f0800fc
+int id menu_item_clear 0x7f0801d4
+int id menu_item_search 0x7f0801d5
 int id message 0x7f0800fd
 int id middle 0x7f0800fe
 int id mini 0x7f0800ff
@@ -2449,6 +2451,7 @@ int layout text_view_with_line_height_from_layout 0x7f0b006e
 int layout text_view_with_line_height_from_style 0x7f0b006f
 int layout text_view_with_theme_line_height 0x7f0b0070
 int layout text_view_without_line_height 0x7f0b0071
+int menu fragment_photo_gallery 0x7f120000
 int mipmap ic_launcher 0x7f0c0000
 int mipmap ic_launcher_round 0x7f0c0001
 int plurals mtrl_badge_content_description 0x7f0d0000
@@ -2487,6 +2490,7 @@ int string character_counter_content_description 0x7f0e001f
 int string character_counter_overflowed_content_description 0x7f0e0020
 int string character_counter_pattern 0x7f0e0021
 int string chip_text 0x7f0e0022
+int string clear_search 0x7f0e0069
 int string clear_text_end_icon_content_description 0x7f0e0023
 int string error_icon_content_description 0x7f0e0024
 int string exposed_dropdown_menu_content_description 0x7f0e0025
@@ -2555,6 +2559,7 @@ int string path_password_eye 0x7f0e0063
 int string path_password_eye_mask_strike_through 0x7f0e0064
 int string path_password_eye_mask_visible 0x7f0e0065
 int string path_password_strike_through 0x7f0e0066
+int string search 0x7f0e006a
 int string search_menu_title 0x7f0e0067
 int string status_bar_notification_info_overflow 0x7f0e0068
 int style AlertDialog_AppCompat 0x7f0f0000

@@ -24,6 +24,10 @@
         "source": "C:\\AndroidStudio\\PhotoGallery_review\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher_round.png"
     },
     {
+        "merged": "C:\\AndroidStudio\\PhotoGallery_review\\app\\build\\intermediates\\res\\merged\\debug\\menu_fragment_photo_gallery.xml.flat",
+        "source": "C:\\AndroidStudio\\PhotoGallery_review\\app\\src\\main\\res\\menu\\fragment_photo_gallery.xml"
+    },
+    {
         "merged": "C:\\AndroidStudio\\PhotoGallery_review\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_launcher_round.png.flat",
         "source": "C:\\AndroidStudio\\PhotoGallery_review\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher_round.png"
     },
@@ -48,12 +52,12 @@
         "source": "C:\\AndroidStudio\\PhotoGallery_review\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
     },
     {
-        "merged": "C:\\AndroidStudio\\PhotoGallery_review\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_launcher_round.png.flat",
-        "source": "C:\\AndroidStudio\\PhotoGallery_review\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.png"
-    },
-    {
         "merged": "C:\\AndroidStudio\\PhotoGallery_review\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v24_loading_picture.gif.flat",
         "source": "C:\\AndroidStudio\\PhotoGallery_review\\app\\src\\main\\res\\drawable-v24\\loading_picture.gif"
+    },
+    {
+        "merged": "C:\\AndroidStudio\\PhotoGallery_review\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\AndroidStudio\\PhotoGallery_review\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.png"
     },
     {
         "merged": "C:\\AndroidStudio\\PhotoGallery_review\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_launcher.png.flat",
