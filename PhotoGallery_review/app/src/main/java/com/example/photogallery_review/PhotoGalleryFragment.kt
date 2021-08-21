@@ -1,5 +1,6 @@
 package com.example.photogallery_review
 
+import android.app.ProgressDialog
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -31,6 +32,7 @@ class PhotoGalleryFragment : Fragment() {
     private lateinit var photoRecyclerView: RecyclerView
     private lateinit var photoGalleryViewModel: PhotoGalleryViewModel
     private lateinit var thumbnailDownloader: ThumbnailDownloader<PhotoHolder>
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +49,11 @@ class PhotoGalleryFragment : Fragment() {
                 photoHolder.bindDrawable(drawable)
             }
         lifecycle.addObserver(thumbnailDownloader.fragmentLifecycleObserver)
+
+        progressDialog = ProgressDialog(requireContext())
+        progressDialog.setTitle("Downloading photos")
+        progressDialog.setMessage("It might take a few seconds..")
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
     }
 
     override fun onCreateView(
@@ -70,6 +77,7 @@ class PhotoGalleryFragment : Fragment() {
         photoGalleryViewModel.galleryItemLiveData.observe(
             viewLifecycleOwner,
             Observer { galleryItems ->
+                progressDialog.dismiss()
                 photoRecyclerView.adapter = PhotoAdapter(galleryItems)
             }
         )
@@ -100,7 +108,9 @@ class PhotoGalleryFragment : Fragment() {
 
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
+                    progressDialog.show()
                     photoGalleryViewModel.fetchPhotos(query!!)
+                    clearFocus()
                     return true
                 }
 
@@ -108,6 +118,12 @@ class PhotoGalleryFragment : Fragment() {
                     return false
                 }
             })
+
+            setOnFocusChangeListener { v, hasFocus ->
+                if (!hasFocus) {
+                    searchItem.collapseActionView()
+                }
+            }
 
             setOnSearchClickListener {
                 searchView.setQuery(photoGalleryViewModel.searchTerm, false)
