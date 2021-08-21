@@ -1052,7 +1052,11 @@ int attr yearStyle 0x7f0303e0
 int attr yearTodayStyle 0x7f0303e1
 int bool abc_action_bar_embed_tabs 0x7f040000
 int bool abc_config_actionMenuItemAllCaps 0x7f040001
+int bool enable_system_alarm_service_default 0x7f040003
+int bool enable_system_foreground_service_default 0x7f040004
+int bool enable_system_job_service_default 0x7f040005
 int bool mtrl_btn_textappearance_all_caps 0x7f040002
+int bool workmanager_test_configuration 0x7f040006
 int color abc_background_cache_hint_selector_material_dark 0x7f050000
 int color abc_background_cache_hint_selector_material_light 0x7f050001
 int color abc_btn_colored_borderless_text_material 0x7f050002
@@ -2082,6 +2086,7 @@ int id material_timepicker_view 0x7f0800fb
 int id material_value_index 0x7f0800fc
 int id menu_item_clear 0x7f0800fd
 int id menu_item_search 0x7f0800fe
+int id menu_item_toggle_polling 0x7f0801d6
 int id message 0x7f0800ff
 int id middle 0x7f080100
 int id mini 0x7f080101
@@ -2554,6 +2559,9 @@ int string mtrl_picker_toggle_to_calendar_input_mode 0x7f0f005f
 int string mtrl_picker_toggle_to_day_selection 0x7f0f0060
 int string mtrl_picker_toggle_to_text_input_mode 0x7f0f0061
 int string mtrl_picker_toggle_to_year_selection 0x7f0f0062
+int string new_pictures_text 0x7f0f006b
+int string new_pictures_title 0x7f0f006c
+int string notification_channel_name 0x7f0f006d
 int string password_toggle_content_description 0x7f0f0063
 int string path_password_eye 0x7f0f0064
 int string path_password_eye_mask_strike_through 0x7f0f0065
@@ -2561,7 +2569,9 @@ int string path_password_eye_mask_visible 0x7f0f0066
 int string path_password_strike_through 0x7f0f0067
 int string search 0x7f0f0068
 int string search_menu_title 0x7f0f0069
+int string start_polling 0x7f0f006e
 int string status_bar_notification_info_overflow 0x7f0f006a
+int string stop_polling 0x7f0f006f
 int style AlertDialog_AppCompat 0x7f100000
 int style AlertDialog_AppCompat_Light 0x7f100001
 int style AndroidThemeColorAccentYellow 0x7f100002

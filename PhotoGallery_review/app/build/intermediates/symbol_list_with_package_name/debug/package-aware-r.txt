@@ -1053,7 +1053,11 @@ attr yearStyle
 attr yearTodayStyle
 bool abc_action_bar_embed_tabs
 bool abc_config_actionMenuItemAllCaps
+bool enable_system_alarm_service_default
+bool enable_system_foreground_service_default
+bool enable_system_job_service_default
 bool mtrl_btn_textappearance_all_caps
+bool workmanager_test_configuration
 color abc_background_cache_hint_selector_material_dark
 color abc_background_cache_hint_selector_material_light
 color abc_btn_colored_borderless_text_material
@@ -2083,6 +2087,7 @@ id material_timepicker_view
 id material_value_index
 id menu_item_clear
 id menu_item_search
+id menu_item_toggle_polling
 id message
 id middle
 id mini
@@ -2555,6 +2560,9 @@ string mtrl_picker_toggle_to_calendar_input_mode
 string mtrl_picker_toggle_to_day_selection
 string mtrl_picker_toggle_to_text_input_mode
 string mtrl_picker_toggle_to_year_selection
+string new_pictures_text
+string new_pictures_title
+string notification_channel_name
 string password_toggle_content_description
 string path_password_eye
 string path_password_eye_mask_strike_through
@@ -2562,7 +2570,9 @@ string path_password_eye_mask_visible
 string path_password_strike_through
 string search
 string search_menu_title
+string start_polling
 string status_bar_notification_info_overflow
+string stop_polling
 style AlertDialog_AppCompat
 style AlertDialog_AppCompat_Light
 style AndroidThemeColorAccentYellow

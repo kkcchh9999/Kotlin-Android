@@ -1,11 +1,11 @@
 [
     {
-        "merged": "C:\\Temp\\AndroidProject\\PhotoGallery_review\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_launcher.png.flat",
-        "source": "C:\\Temp\\AndroidProject\\PhotoGallery_review\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png"
-    },
-    {
         "merged": "C:\\Temp\\AndroidProject\\PhotoGallery_review\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_launcher.png.flat",
         "source": "C:\\Temp\\AndroidProject\\PhotoGallery_review\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Temp\\AndroidProject\\PhotoGallery_review\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_launcher.png.flat",
+        "source": "C:\\Temp\\AndroidProject\\PhotoGallery_review\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png"
     },
     {
         "merged": "C:\\Temp\\AndroidProject\\PhotoGallery_review\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_launcher.png.flat",
